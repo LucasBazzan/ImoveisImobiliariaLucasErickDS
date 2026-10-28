@@ -1,0 +1,37 @@
+ImoveisImobiliariaLucasErickDS - CRUD completo
+================================================
+
+1. Abra esta pasta como projeto Java Ant no NetBeans. Preserve os arquivos .form.
+2. Use o banco imobiliariasimoveislucaserickds existente no MySQL/MariaDB.
+   IMPORTANTE: NÃO reexecute o dump original Database/ImoveisImobiliariaDatabaseLucasErickDS
+   sobre um banco com dados, porque ele contém DROP TABLE e apaga os registros.
+3. A classe Model.DatabaseConnection mantém os dados de conexão originais do projeto:
+   confirme apenas se sua instância MySQL está ativa e corresponde à configuração.
+4. Execute View.ImobiliariaView. A tela de imóveis é aberta pelo botão de navegação.
+5. Cadastre uma imobiliária primeiro. Depois, o cadastro de imóveis exibirá a
+   imobiliária como "ID - Nome", evitando confusões entre nomes repetidos.
+6. Para ALTERAR ou EXCLUIR: clique em "Consultar Catálogo", selecione uma linha e
+   confirme a seleção. Isso carrega o registro para edição/exclusão.
+7. A tabela imoveis exige Situacao, mas o formulário original não possuía esse campo.
+   Foi acrescentada uma pergunta de situação ao cadastrar ou atualizar, sem alterar
+   o design de seu formulário no NetBeans.
+8. Imagens escolhidas são copiadas para a pasta:
+   [pasta do usuário]/ImoveisImobiliariaLucasErickDS/fotos
+   O banco guarda só o nome do arquivo (cabe no VARCHAR(45) existente), e a tela
+   mostra a foto ao consultar. Sem foto, o registro salva Foto=''.
+   Como os arquivos ficam no computador local, cópias do banco em outro computador
+   exigem copiar também essa pasta de fotos.
+9. A exclusão de uma imobiliária com imóveis é bloqueada pelo programa.
+10. A coluna Valor é FLOAT no schema original. Foi mantida por compatibilidade,
+    embora DECIMAL(13,2) seja recomendado futuramente para valores monetários.
+11. Foram incluídos DAO, Controller e utilitários para todo o CRUD com PreparedStatement.
+
+Validações locais realizadas:
+- Build completo do projeto com Ant e JDK 21, usando source/target 21 para o teste
+  (o projeto mantém sua configuração original de JDK 25 para o NetBeans do usuário).
+- Cinco testes automatizados de validação de campos e persistência de foto: passaram.
+- A tela de imobiliárias iniciou corretamente em ambiente gráfico virtual.
+
+Pendente para validação no computador do usuário:
+- Executar os fluxos CRUD contra o MySQL local real (não está acessível neste ambiente).
+- Confirmar as fotos e demais telas no Look & Feel e resolução do seu Windows.
