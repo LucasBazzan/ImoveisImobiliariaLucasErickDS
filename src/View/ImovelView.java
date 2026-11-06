@@ -24,6 +24,7 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -42,13 +43,14 @@ public class ImovelView extends javax.swing.JFrame {
     private String fotoAtual = "";
     private String situacaoAtual = "Disponível";
     private File imagemSelecionada = null;
+    private final List<Integer> idsImobiliarias = new ArrayList<>();
 
     /**
      * Creates new form ImovelView
      */
     public ImovelView() {
         initComponents();
-    
+
         EstiloBotao.aplicar(btnInserirImagem, Cores.LIGHT_BLUE);
         EstiloBotao.aplicar(btnCadastrar, Cores.GREEN);
         EstiloBotao.aplicar(btnExcluir, Cores.RED);
@@ -121,6 +123,7 @@ public class ImovelView extends javax.swing.JFrame {
 
         btnCadastrar.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(this::btnCadastrarActionPerformed);
 
         btnLimpar.setFont(new java.awt.Font("Nirmala UI", 0, 18)); // NOI18N
         btnLimpar.setText("Limpar ");
@@ -192,6 +195,7 @@ public class ImovelView extends javax.swing.JFrame {
         lblImagem.setPreferredSize(new java.awt.Dimension(367, 210));
 
         cbListarImobiliarias.setFont(new java.awt.Font("Nirmala UI", 0, 14)); // NOI18N
+        cbListarImobiliarias.addActionListener(this::cbListarImobiliariasActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -339,7 +343,9 @@ public class ImovelView extends javax.swing.JFrame {
         chooser.setDialogTitle("Selecionar imagem");
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileNameExtensionFilter("Imagens (PNG, JPG, JPEG)", "png", "jpg", "jpeg"));
-        if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
+        if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
         try {
             mostrarFoto(chooser.getSelectedFile());
             imagemSelecionada = chooser.getSelectedFile();
@@ -355,21 +361,21 @@ public class ImovelView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnIrParaImoveisActionPerformed
 
     private void txtTipoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTipoFocusGained
-        if (txtTipo.getText().equals("Digite o tipo")) 
+        if (txtTipo.getText().equals("Digite o tipo"))
             txtTipo.setText("");
     }//GEN-LAST:event_txtTipoFocusGained
     private void txtTipoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTipoFocusLost
-        if (txtTipo.getText().isEmpty()) 
+        if (txtTipo.getText().isEmpty())
             txtTipo.setText("Digite o tipo");
     }//GEN-LAST:event_txtTipoFocusLost
 
     private void txtBairroFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBairroFocusGained
-        if (txtBairro.getText().equals("Bairro do imóvel")) 
-            txtBairro.setText("");   
+        if (txtBairro.getText().equals("Bairro do imóvel"))
+            txtBairro.setText("");
     }//GEN-LAST:event_txtBairroFocusGained
     private void txtBairroFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBairroFocusLost
-        if (txtBairro.getText().isEmpty()) 
-            txtBairro.setText("Bairro do imóvel");  
+        if (txtBairro.getText().isEmpty())
+            txtBairro.setText("Bairro do imóvel");
     }//GEN-LAST:event_txtBairroFocusLost
 
     private void txtValorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtValorFocusGained
@@ -378,14 +384,23 @@ public class ImovelView extends javax.swing.JFrame {
     }//GEN-LAST:event_txtValorFocusGained
 
     private void txtValorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtValorFocusLost
-        if (txtValor.getText().isEmpty())
+        if (txtValor.getText().isEmpty()) {
             txtValor.setText("Valor do imóvel (R$)");
+        }
 
     }//GEN-LAST:event_txtValorFocusLost
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         RadianceThemingCortex.ComponentOrParentChainScope.setFocusKind(cbListarImobiliarias, FocusKind.NONE);
     }//GEN-LAST:event_formWindowOpened
+
+    private void cbListarImobiliariasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbListarImobiliariasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbListarImobiliariasActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCadastrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -399,32 +414,38 @@ public class ImovelView extends javax.swing.JFrame {
         try {
             List<ImobiliariasModel> lista = imobiliariaController.listar();
             DefaultComboBoxModel<String> combo = new DefaultComboBoxModel<>();
+
             nomesImobiliarias.clear();
+            idsImobiliarias.clear();
+
             for (ImobiliariasModel imob : lista) {
                 nomesImobiliarias.put(imob.getID(), imob.getNome());
-                combo.addElement(imob.getID() + " - " + imob.getNome());
+                idsImobiliarias.add(imob.getID());
+
+                combo.addElement(imob.getNome());
             }
+
             cbListarImobiliarias.setModel(combo);
-        } catch (SQLException e) { mostrarErro(e); }
+
+        } catch (SQLException e) {
+            mostrarErro(e);
+        }
     }
 
     private int obterIdImobiliaria() {
-        Object selecionado = cbListarImobiliarias.getSelectedItem();
-        if (selecionado == null) return 0;
-        String item = selecionado.toString();
-        int separador = item.indexOf(" - ");
-        return separador > 0 ? Integer.parseInt(item.substring(0, separador)) : 0;
+        int index = cbListarImobiliarias.getSelectedIndex();
+
+        if (index < 0 || index >= idsImobiliarias.size()) {
+            return 0;
+        }
+
+        return idsImobiliarias.get(index);
     }
 
     private void selecionarImobiliaria(int id) {
-        for (int i = 0; i < cbListarImobiliarias.getItemCount(); i++) {
-            String item = cbListarImobiliarias.getItemAt(i);
-            if (item.startsWith(id + " - ")) {
-                cbListarImobiliarias.setSelectedIndex(i);
-                return;
-            }
-        }
-        cbListarImobiliarias.setSelectedIndex(-1);
+        int index = idsImobiliarias.indexOf(id);
+
+        cbListarImobiliarias.setSelectedIndex(index);
     }
 
     private String lerCampo(javax.swing.JTextField campo, String placeholder) {
@@ -435,9 +456,12 @@ public class ImovelView extends javax.swing.JFrame {
     private float obterValor() {
         String valor = lerCampo(txtValor, "Valor do imóvel (R$)")
                 .replace("R$", "").replace(" ", "");
-        if (valor.contains(",")) valor = valor.replace(".", "").replace(",", ".");
-        try { return Float.parseFloat(valor); }
-        catch (NumberFormatException e) {
+        if (valor.contains(",")) {
+            valor = valor.replace(".", "").replace(",", ".");
+        }
+        try {
+            return Float.parseFloat(valor);
+        } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Valor inválido. Exemplo: 350.000,50");
         }
     }
@@ -462,9 +486,13 @@ public class ImovelView extends javax.swing.JFrame {
     }
 
     private void mostrarFoto(File arquivo) throws IOException {
-        if (arquivo == null || !arquivo.isFile()) throw new IOException("Foto não encontrada.");
+        if (arquivo == null || !arquivo.isFile()) {
+            throw new IOException("Foto não encontrada.");
+        }
         BufferedImage imagem = ImageIO.read(arquivo);
-        if (imagem == null) throw new IOException("Arquivo de imagem inválido.");
+        if (imagem == null) {
+            throw new IOException("Arquivo de imagem inválido.");
+        }
         Insets borda = lblImagem.getInsets();
         int largura = lblImagem.getWidth() - borda.left - borda.right;
         int altura = lblImagem.getHeight() - borda.top - borda.bottom;
@@ -479,7 +507,7 @@ public class ImovelView extends javax.swing.JFrame {
         Graphics2D g = preview.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(imagem, (largura - novaLargura) / 2, (altura - novaAltura) / 2,
-                    novaLargura, novaAltura, null);
+                novaLargura, novaAltura, null);
         g.dispose();
         lblImagem.setIcon(new ImageIcon(preview));
         lblImagem.setText("");
@@ -496,12 +524,16 @@ public class ImovelView extends javax.swing.JFrame {
         txtDescricao.setText("");
         lblImagem.setIcon(null);
         lblImagem.setText("");
-        if (cbListarImobiliarias.getItemCount() > 0) cbListarImobiliarias.setSelectedIndex(0);
+        if (cbListarImobiliarias.getItemCount() > 0) {
+            cbListarImobiliarias.setSelectedIndex(0);
+        }
     }
 
     private void cadastrar() {
         String situacao = perguntarSituacao();
-        if (situacao == null) return;
+        if (situacao == null) {
+            return;
+        }
         String novaFoto = "";
         try {
             // Validação antes de copiar a foto e gravar no banco.
@@ -528,7 +560,9 @@ public class ImovelView extends javax.swing.JFrame {
             for (int i = 0; i < lista.size(); i++) {
                 ImovelModel imovel = lista.get(i);
                 String descricao = imovel.getDescricao().replaceAll("\\s+", " ");
-                if (descricao.length() > 55) descricao = descricao.substring(0, 55) + "...";
+                if (descricao.length() > 55) {
+                    descricao = descricao.substring(0, 55) + "...";
+                }
                 dados[i] = new Object[]{imovel.getID(), imovel.getTipo(), imovel.getBairro(),
                     String.format(Locale.forLanguageTag("pt-BR"), "%.2f", imovel.getValor()),
                     nomesImobiliarias.getOrDefault(imovel.getIDImobiliaria(), "ID " + imovel.getIDImobiliaria()),
@@ -537,7 +571,9 @@ public class ImovelView extends javax.swing.JFrame {
             int id = Catalogo.selecionar(this, "Catálogo de imóveis",
                     new String[]{"ID", "Tipo", "Bairro", "Valor (R$)", "Imobiliária", "Situação", "Descrição"},
                     dados);
-            if (id == 0) return;
+            if (id == 0) {
+                return;
+            }
             ImovelModel imovel = controller.buscarPorId(id);
             if (imovel == null) {
                 JOptionPane.showMessageDialog(this, "Imóvel não encontrado.");
@@ -555,12 +591,17 @@ public class ImovelView extends javax.swing.JFrame {
             lblImagem.setIcon(null);
             File foto = FotoUtils.localizar(fotoAtual);
             if (foto != null && foto.isFile()) {
-                try { mostrarFoto(foto); }
-                catch (IOException e) { lblImagem.setText("Imagem indisponível"); }
+                try {
+                    mostrarFoto(foto);
+                } catch (IOException e) {
+                    lblImagem.setText("Imagem indisponível");
+                }
             } else if (fotoAtual != null && !fotoAtual.isEmpty()) {
                 lblImagem.setText("Imagem indisponível");
             }
-        } catch (SQLException e) { mostrarErro(e); }
+        } catch (SQLException e) {
+            mostrarErro(e);
+        }
     }
 
     private void atualizar() {
@@ -569,7 +610,9 @@ public class ImovelView extends javax.swing.JFrame {
             return;
         }
         String situacao = perguntarSituacao();
-        if (situacao == null) return;
+        if (situacao == null) {
+            return;
+        }
         String novaFoto = "";
         try {
             ImovelModel imovel = dadosDoFormulario(fotoAtual, situacao);
@@ -581,7 +624,9 @@ public class ImovelView extends javax.swing.JFrame {
                 FotoUtils.excluir(novaFoto);
                 JOptionPane.showMessageDialog(this, "Registro não encontrado.");
             } else {
-                if (!novaFoto.isEmpty()) FotoUtils.excluir(fotoAtual);
+                if (!novaFoto.isEmpty()) {
+                    FotoUtils.excluir(fotoAtual);
+                }
                 JOptionPane.showMessageDialog(this, "Imóvel atualizado!");
             }
             limpar();
@@ -597,14 +642,20 @@ public class ImovelView extends javax.swing.JFrame {
             return;
         }
         if (JOptionPane.showConfirmDialog(this, "Excluir o imóvel ID " + idSelecionado + "?",
-                "Confirmar exclusão", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return;
+                "Confirmar exclusão", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+            return;
+        }
         try {
             if (controller.excluir(idSelecionado)) {
                 FotoUtils.excluir(fotoAtual);
                 JOptionPane.showMessageDialog(this, "Imóvel excluído!");
-            } else JOptionPane.showMessageDialog(this, "Registro não encontrado.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Registro não encontrado.");
+            }
             limpar();
-        } catch (SQLException e) { mostrarErro(e); }
+        } catch (SQLException e) {
+            mostrarErro(e);
+        }
     }
 
     public static void main(String args[]) {
